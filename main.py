@@ -17,4 +17,4 @@ def main():
     if uploadede_file is not None:
         df = load_transactions(uploadede_file)
 
-main()
+main().
