@@ -6,6 +6,10 @@ import os
 
 st.set_page_config(page_title="Simple Finance App", page_icon="💸", layout="wide")
 
+if "categories" is not in st.session_state:
+    st.session_state.categories = {
+        "Uncategorized": []
+    }
 
 def load_transactions(file):
     try:
