@@ -29,6 +29,6 @@ def main():
             debits_df = df[df["Debit/Credit"] == "Debit"].copy()
             credits_df = df[df["Debit/Credit"] == "Credit"].copy()
 
-            tab1, tab2 = str.tabs()
+            tab1, tab2 = str.tabs(["Expenses (Debits)", "Payments (Credits)"])
 
 main()
