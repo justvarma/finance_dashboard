@@ -3,3 +3,6 @@ import pandas as pd
 import plotly.express as px
 import josn
 import os
+
+st.set_page_config(page_title="Simple Finance App", page_icon="💸", layout="wide")
+
