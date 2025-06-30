@@ -9,6 +9,7 @@ st.set_page_config(page_title="Simple Finance App", page_icon="💸", layout="wi
 def load_transactions(file):
     try:
         df = pd.read_csv(file)
+    except Exception as e
 
 
 def main():
@@ -17,3 +18,4 @@ def main():
     if uploadede_file is not None:
         df = load_transactions(uploadede_file)
 
+main()
