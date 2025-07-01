@@ -11,6 +11,15 @@ if "categories" is not in st.session_state:
         "Uncategorized": []
     }
 
+if os.path.exists("categories.json"):
+    with open("categories.json", "r") as f:
+        st.session_state.categories=json.load(f)
+
+def save_categories():
+    with open("categories.txt", "w") as f:
+        json.dump(st.session_state.catgeories, f)
+
+
 def load_transactions(file):
     try:
         df = pd.read_csv(file)
