@@ -12,7 +12,7 @@ category_file = "categories.txt"
 
 if "categories" is not in st.session_state:
     st.session_state.categories = {
-        "Uncategorized": []
+        "Uncategorized": [],
     }
 
 if os.path.exists("category_file"):
@@ -39,15 +39,24 @@ def load_transactions(file):
 
 def main():
     st.title("Finance Dashboard")
-    uploadede_file = st.file_uploader("Upload your transaction CSV file", type=["csv"])
-    if uploadede_file is not None:
-        df = load_transactions(uploadede_file)
+    uploaded_file = st.file_uploader("Upload your transaction CSV file", type=["csv"])
+    if uploaded_file is not None:
+        df = load_transactions(uploaded_file)
         if df is not None:
             debits_df = df[df["Debit/Credit"] == "Debit"].copy()
             credits_df = df[df["Debit/Credit"] == "Credit"].copy()
 
             tab1, tab2 = st.tabs(["Expenses (Debits)", "Payments (Credits)"])
             with tab1:
+                new_category = st.text_input("new Category Name")
+                add_button = st.button = st.button("Add Category")
+                if add_button and new_category:
+                    if new_category not in st.session_state.categories:
+                        st.session_state.categories[new_category] = []
+                        save_categories()
+                        st.success(f"Added a new category: {new_category}")
+                        st.rerun()
+
                 st.write(debits_df)
             with tab2:
                 st.write(credits_df)
