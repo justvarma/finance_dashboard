@@ -10,27 +10,28 @@ st.set_page_config(page_title="Simple Finance App", page_icon="💸", layout="wi
 
 category_file = "categories.txt"
 
-if "categories" is not in st.session_state:
+if "categories" not in st.session_state:
     st.session_state.categories = {
         "Uncategorized": [],
     }
 
-if os.path.exists("category_file"):
-    with open("category_file", "r") as f:
+if os.path.exists(category_file):
+    with open(category_file, "r") as f:
         st.session_state.categories = json.load(f)
 
 
 def save_categories():
-    with open("category_file", "w") as f:
-        json.dump(st.session_state.catgeories, f)
+    with open(category_file, "w") as f:
+        json.dump(st.session_state.categories, f)
 
 
 def load_transactions(file):
     try:
         df = pd.read_csv(file)
         df.columns = [col.strip() for col in df.columns]
-        df["Amount"] = df["Amount"].str.replace(",", "").astype(float)
-        df["Date"] = pd.to_datetime(df["Date"], format="%d %b %Y")
+        df["Amount"] = df["Amount"].replace(",", "", regex=True).astype(float)
+        df["Date"] = pd.to_datetime(df["Date"], format="%d %b %Y", errors="coerce")
+        df = df.dropna(subset=["Date"])
         return df
     except Exception as e:
         st.error(f"Error processing file: {str(e)}")
@@ -48,8 +49,8 @@ def main():
 
             tab1, tab2 = st.tabs(["Expenses (Debits)", "Payments (Credits)"])
             with tab1:
-                new_category = st.text_input("new Category Name")
-                add_button = st.button = st.button("Add Category")
+                new_category = st.text_input("New Category Name")
+                add_button = st.button("Add Category")
                 if add_button and new_category:
                     if new_category not in st.session_state.categories:
                         st.session_state.categories[new_category] = []
