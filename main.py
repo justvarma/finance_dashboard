@@ -8,7 +8,7 @@ from unicodedata import category
 
 st.set_page_config(page_title="Simple Finance App", page_icon="💸", layout="wide")
 
-category_file = "categories.txt"
+category_file = "categories.json"
 
 if "categories" not in st.session_state:
     st.session_state.categories = {
@@ -23,6 +23,19 @@ if os.path.exists(category_file):
 def save_categories():
     with open(category_file, "w") as f:
         json.dump(st.session_state.categories, f)
+
+
+def categorize_transactions(df):
+    df["Category"] = "Uncategorized"
+
+    for category, keywords in st.session_state.categories.items():
+        if category == "Uncategorized" or not keywords:
+            continue
+
+        lowered_keywords=[]
+
+        for idx, row in df.iterrows():
+            details = row["Details"].lower()
 
 
 def load_transactions(file):
@@ -55,7 +68,6 @@ def main():
                     if new_category not in st.session_state.categories:
                         st.session_state.categories[new_category] = []
                         save_categories()
-                        st.success(f"Added a new category: {new_category}")
                         st.rerun()
 
                 st.write(debits_df)
