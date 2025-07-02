@@ -5,7 +5,7 @@ import json
 import os
 
 from astropy.modeling.core import hide_inverse
-from streamlit import column_config
+import streamlit.column_config as column_config
 from unicodedata import category
 
 st.set_page_config(page_title="Simple Finance App", page_icon="💸", layout="wide")
@@ -39,7 +39,7 @@ def categorize_transactions(df):
         for idx, row in df.iterrows():
             details = row["Details"].lower().strip()
             if details in lowered_keywords:
-                df.act[idx, "Category"] = category
+                df.at[idx, "Category"] = category
     return df
 
 
@@ -89,7 +89,7 @@ def main():
                         st.rerun()
 
                 st.subheader("Your Expenses")
-                edited_df=st.data_editor()(
+                edited_df = st.data_editor(
                     st.session_state.debits_df[["Date", "Details", "Amount", "Category"]],
                     column_config={
                         "Date": st.column_config.DateColumn("Date", format="DD/MM/YYYY"),
@@ -103,10 +103,6 @@ def main():
                     use_container_width=True,
                     key="category_editor"
                 )
-
-                save_button=st.button("Apply Changes", type="primary")
-                if save_button:
-                    pass
 
             with tab2:
                 st.write(credits_df)
