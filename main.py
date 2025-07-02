@@ -4,6 +4,8 @@ import plotly.express as px
 import json
 import os
 
+from astropy.modeling.core import hide_inverse
+from streamlit import column_config
 from unicodedata import category
 
 st.set_page_config(page_title="Simple Finance App", page_icon="💸", layout="wide")
@@ -74,6 +76,8 @@ def main():
             debits_df = df[df["Debit/Credit"] == "Debit"].copy()
             credits_df = df[df["Debit/Credit"] == "Credit"].copy()
 
+            st.session_state.debits_df=debits_df.copy()
+
             tab1, tab2 = st.tabs(["Expenses (Debits)", "Payments (Credits)"])
             with tab1:
                 new_category = st.text_input("New Category Name")
@@ -84,7 +88,26 @@ def main():
                         save_categories()
                         st.rerun()
 
-                st.write(debits_df)
+                st.subheader("Your Expenses")
+                edited_df=st.data_editor()(
+                    st.session_state.debits_df[["Date", "Details", "Amount", "Category"]],
+                    column_config={
+                        "Date": st.column_config.DateColumn("Date", format="DD/MM/YYYY"),
+                        "Amount": st.column_config.NumberColumn("Amount", format="%.2f AED"),
+                        "Category": st.column_config.SelectboxColumn(
+                            "Category",
+                            options=list(st.session_state.categories.keys())
+                        )
+                    },
+                    hide_index=True,
+                    use_container_width=True,
+                    key="category_editor"
+                )
+
+                save_button=st.button("Apply Changes", type="primary")
+                if save_button:
+                    pass
+
             with tab2:
                 st.write(credits_df)
 
