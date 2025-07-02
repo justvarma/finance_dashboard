@@ -1,5 +1,5 @@
 Date,Details,Amount,Currency,Debit/Credit,Status,
-28 Feb 2025,Card Payment Received,"18,551.62",AED,Credit,SETTLED, 
+28 Feb 2025,Card Payment Received,"18,551.62",AED,Credit,SETTLED,<unset>
 15 Feb 2025,EMIRATES INSURANCE,137.95,AED,Debit,SETTLED
 04 Feb 2025,NOON.COM,110.69,AED,Debit,SETTLED
 23 Feb 2025,Card Payment Received,"12,351.42",AED,Credit,SETTLED

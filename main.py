@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+import plotly.express as px
 import json
 import os
 
@@ -106,8 +107,32 @@ def main():
                         add_keyword_to_category(new_cat, details)
                     st.success("Changes applied and categories updated!")
 
+                st.subheader('Expense Summary')
+                category_totals = st.session_state.debits_df.groupby("Category")["Amount"].sum().reset_index()
+                category_totals=category_totals.sort_values("Amount", ascending=False)
+
+                st.data_editor(
+                    category_totals,
+                    column_config={
+                        "Amount": st.column_config.NumberColumn("Amount", format="%.2f AED")
+                    },
+                    use_container_width=True,
+                    hide_index=True
+                )
+
+                fig=px.pie(
+                    category_totals,
+                    values="Amount",
+                    names="Category",
+                    title="Expenses by Category"
+                )
+                st.plotly_chart(fig, use_container_width=True)
+
+
             with tab2:
-                st.subheader("Your Payments")
+                st.subheader("Payments Summary")
+                total_payments=credits_df["Amount"].sum()
+                st.metric("Total Payments", f"{total_payments:,.2f} AED")
                 st.write(credits_df)
 
 
