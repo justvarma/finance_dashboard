@@ -76,7 +76,7 @@ def main():
             debits_df = df[df["Debit/Credit"] == "Debit"].copy()
             credits_df = df[df["Debit/Credit"] == "Credit"].copy()
 
-            st.session_state.debits_df=debits_df.copy()
+            st.session_state.debits_df = debits_df.copy()
 
             tab1, tab2 = st.tabs(["Expenses (Debits)", "Payments (Credits)"])
             with tab1:
@@ -104,8 +104,18 @@ def main():
                     key="category_editor"
                 )
 
-            with tab2:
-                st.write(credits_df)
+                save_button = st.button("Apply Changes", type="primary")
+                if save_button:
+                    for idx, row in edited_df.iterrows():
+                        new_category = row["Category"]
+                        if new_category == st.session_state.debits_df.at[idx, "Category"]:
+                            continue
+                        details = row["Details"]
+                        st.session_state.debits_df.at[idx, "Category"] = new_category
+                        add_keyword_to_category(new_category, details)
+
+        with tab2:
+            st.write(credits_df)
 
 
 main()
