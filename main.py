@@ -55,6 +55,16 @@ def load_transactions(file):
         return None
 
 
+def add_keyword_to_category(category, keyword):
+    keyword = keyword.strip()
+    if keyword and keyword not in st.session_state.categories[category]:
+        st.session_state.categories[category].append(keyword)
+        save_categories()
+        return True
+
+    return False
+
+
 def main():
     st.title("Finance Dashboard")
     uploaded_file = st.file_uploader("Upload your transaction CSV file", type=["csv"])
