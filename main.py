@@ -32,10 +32,13 @@ def categorize_transactions(df):
         if category == "Uncategorized" or not keywords:
             continue
 
-        lowered_keywords=[]
+        lowered_keywords = [keyword.lower() for keyword in keywords]
 
         for idx, row in df.iterrows():
-            details = row["Details"].lower()
+            details = row["Details"].lower().strip()
+            if details in lowered_keywords:
+                df.act[idx, "Category"] = category
+    return df
 
 
 def load_transactions(file):
@@ -45,7 +48,8 @@ def load_transactions(file):
         df["Amount"] = df["Amount"].replace(",", "", regex=True).astype(float)
         df["Date"] = pd.to_datetime(df["Date"], format="%d %b %Y", errors="coerce")
         df = df.dropna(subset=["Date"])
-        return df
+
+        return categorize_transactions(df)
     except Exception as e:
         st.error(f"Error processing file: {str(e)}")
         return None
